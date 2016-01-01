@@ -1,53 +1,75 @@
 var current_address, weather_url, pm25, hourInterval, temperatureInterval, environmentInterval, energyInterval;
 
+function showTime() {
+    var now = new Date(),
+        hours = now.getHours(),
+        mins = now.getMinutes(),
+        secs = now.getSeconds(),
+        time = "",
+        timerID = setTimeout("showTime()", 1000);
+    time += ((hours <= 12) ? "上午" : "下午");
+    time += hours;
+    time += ((mins < 10) ? ":0" : ":") + mins;
+    time += ((secs < 10) ? ":0" : ":") + secs;
+    $('.clock .time').html(time);
+};
+showTime();
+
+function fullScreen() {
+    var el = document.documentElement;
+    var rfs = el.requestFullScreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullScreen;
+
+    if (typeof rfs != "undefined" && rfs) {
+        rfs.call(el);
+    } else if (typeof window.ActiveXObject != "undefined") {
+        var wscript = new ActiveXObject("WScript.Shell");
+        if (wscript != null) {
+            wscript.SendKeys("{F11}");
+        }
+    }
+}
+
 // function hour() {
-//     $('.energy').animate({
-//         width: '0',
-//         height: '0'
-//     }, 3000);
 //     $('.hour').animate({
-//         width: '100%',
-//         height: '100%'
-//     }, 3000);
-//     setTimeout(temperature(), 3000);
-// };
-
-// function temperature() {
+//         // left: '100%',
+//         right: '0'
+//     }, 6000);
 //     $('.hour').animate({
-//         width: '0',
-//         height: '0'
-//     }, 3000);
-//     $('.temperature-container').animate({
-//         width: '100%',
-//         height: '100%'
-//     }, 3000);
-//     setTimeout(environment(), 6000);
-// };
-
-// function environment() {
-//     $('.temperature-container').animate({
-//         width: '0',
-//         height: '0'
-//     }, 3000);
-//     $('.environment-container').animate({
-//         width: '100%',
-//         height: '100%'
-//     }, 3000);
-//     setTimeout(energy(), 9000);
-// };
-
-// function energy() {
-//     $('.environment-container').animate({
-//         width: '0',
-//         height: '0'
-//     }, 3000);
-//     $('.energy').animate({
-//         width: '95%',
-//         height: '100%'
-//     }, 3000);
-//     setTimeout(hour(), 12000);
+//         right: '100%'
+//     }, 0);
+//     temperature();
 // };
 // hour();
+
+// function temperature() {
+//     $('.temperature-container').animate({
+//         // left: '100%',
+//         right: '0'
+//     }, 6000);
+//     $('.temperature-container').animate({
+//         right: '100%'
+//     }, 0);
+//     hour();
+// };
+
+function environment() {
+    $('.temperature-container').animate({
+        right: '100%'
+    }, 3000);
+    $('.environment-container').animate({
+        right: '0'
+    }, 3000);
+};
+
+function energy() {
+    $('.environment-container').animate({
+        right: '100%'
+    }, 3000);
+    $('.energy').animate({
+        right: '0'
+    }, 3000);
+};
+
 $.ajax({
     type: 'get',
     url: 'http:////api.map.baidu.com/location/ip?ak=1d86e3b5d994cd5f46514b7c3d1c1723',

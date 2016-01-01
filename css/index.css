@@ -1,13 +1,14 @@
 * {
     margin: 0;
     padding: 0;
-    /*border: 1px dashed #000;*/
+    border: 0;
 }
 
 html {
     background-color: #e0ebf5;
     width: 100%;
     height: 100%;
+    overflow: hidden;
 }
 
 body {
@@ -150,8 +151,43 @@ a {
 }
 
 .hour {
-    width: 0;
-    height: 100%;
+    width: 100%;
+    height: 90%;
+}
+
+.temperature-container {
+    height: 90%;
+    color: #fff;
+    font-size: 24px;
+}
+
+.environment-container {
+    width: 100%;
+    background: url(../img/environmentbg.jpg) 0 0 no-repeat;
+    position: absolute;
+    top: 60px;
+    bottom: 0px;
+    left: 0px;
+}
+
+.energy {
+    width: 95%;
+    position: absolute;
+    top: 110px;
+    bottom: 130px;
+    left: 50px;
+}
+
+.fly-left {
+    position: absolute;
+    left: 100%;
+    right: 0;
+}
+
+.fly-right {
+    position: absolute;
+    right: 100%;
+    left: 0;
 }
 
 .header {
@@ -172,15 +208,8 @@ a {
     color: #0080dd;
 }
 
-.temperature-container {
-    height: 90%;
-    height: 100%;
-    color: #fff;
-    font-size: 24px;
-}
-
 .temperature {
-    width: 550px;
+    width: 549px;
     height: 386px;
     margin: 0 23px;
     border-radius: 10px;
@@ -209,7 +238,7 @@ a {
 }
 
 .icon-size {
-    width: 241px;
+    width: 240px;
     height: 70px;
 }
 
@@ -217,20 +246,11 @@ a {
     width: 212px;
 }
 
-.environment-container {
-    width: 100%;
-    background: url(../img/environmentbg.jpg) 0 0 no-repeat;
-    position: absolute;
-    top: 60px;
-    bottom: 0px;
-    left: 0px;
-}
-
 .environment {
     display: inline-block;
     background-color: rgba(0, 0, 0, 0.1);
     margin: 0 2px;
-    width: 350px;
+    width: 349px;
     height: 100%;
     border: 1px solid #9AB4CD;
     border-radius: 10px;
@@ -239,19 +259,11 @@ a {
 .environment-icon {
     margin-top: 60px;
     height: 200px;
-    width: 200px;
+    width: 199px;
     border-radius: 50%;
     background-color: #e0ebf5;
     text-align: center;
     line-height: 100%;
-}
-
-.energy {
-    width: 95%;
-    position: absolute;
-    top: 110px;
-    bottom: 130px;
-    left: 50px;
 }
 
 .pieTitle {
