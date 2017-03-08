@@ -1,5 +1,7 @@
-// window.open(document.location)
-var current_address, weather_url, pm25, hourInterval, temperatureInterval, environmentInterval, energyInterval, DATE = new Date(),
+var current_address, weather_url, pm25, energyInterval, environmentInterval = null,
+    index = 1,
+    energyInterval = null,
+    DATE = new Date(),
     mouth = DATE.getFullYear().toString() + (DATE.getMonth() > 8 && DATE.getMonth() + 1 || ('0' + (DATE.getMonth() + 1).toString())).toString();
 
 function showTime() {
@@ -53,13 +55,16 @@ function fullScreen() {
 // };
 
 function environment() {
+    environmentInterval && clearInterval(environmentInterval);
+    environmentInterval = setInterval(energy(), 3000);
     $('.energy').addClass('none')
     $('.environment-container').removeClass('none');
-    setTimeout(energy(), 3000);
 };
 // setTimeout(energy(), 300000);
 
 function energy() {
+    energyInterval && clearInterval(energyInterval);
+    energyInterval = setInterval(environment(), 3000);
     $('.energy').removeClass('none')
     $('.environment-container').addClass('none');
     // $('.environment-container').animate({
@@ -70,10 +75,48 @@ function energy() {
     // }, 3000);
     // setTimeout(environment(), 3000);
 };
+// energy();
+var environmentWidth = $('.environment-container').width();
+var energyWidth = $('.energy').width();
+
+timer = setInterval('go()', 5000);
+
+function go() {
+    //计时器的函数
+    if (index == 1) {
+        index = 2
+    } else {
+        index = 1;
+    };
+    selectPic(index);
+}
+
+function selectPic(num) {
+    console.log('num', num);
+    if (num === 1) {
+        $(".environment-container").addClass("none").siblings().removeClass("none");
+        $(".environment-container").animate({
+            left: -environmentWidth,
+        }, 2000, 'linear');
+        $(".energy").animate({
+            left: '50px',
+        }, 2000, 'linear')
+    } else {
+        $(".energy").addClass("none").siblings().removeClass("none");
+        $(".energy").animate({
+            left: -energyWidth,
+        }, 2000, 'linear');
+        $(".environment-container").animate({
+            left: '0px',
+        }, 2000, 'linear')
+    }
+    clearInterval(timer);
+    timer = setInterval('go()', 5000);
+}
 
 $.ajax({
     type: 'get',
-    url: 'http:////api.map.baidu.com/location/ip?ak=1d86e3b5d994cd5f46514b7c3d1c1723',
+    url: 'http://api.map.baidu.com/location/ip?ak=1d86e3b5d994cd5f46514b7c3d1c1723',
     dataType: 'jsonp',
     jsonp: "callback",
     jsonpCallback: "success_jsonpCallback",
@@ -91,11 +134,11 @@ $.ajax({
                 showTime();
                 temperature = data.results[0].weather_data[0].temperature;
                 weather = data.results[0].weather_data[0].weather;
-                weather[weather.length - 1] === "晴" && $('.weatherIcon').addClass('icon-qing');
-                weather[weather.length - 1] === "雨" && $('.weatherIcon').addClass('icon-xiaoyu');
-                weather[weather.length - 1] === "雪" && $('.weatherIcon').addClass('icon-xue');
-                weather[weather.length - 1] === "云" && $('.weatherIcon').addClass('icon-cloudy');
-                weather[weather.length - 1] === "阴" && $('.weatherIcon').addClass('icon-yin');
+                weather.split('')[weather.split('').length - 1] === "晴" && $('.weatherIcon').addClass('icon-qing');
+                weather.split('')[weather.split('').length - 1] === "雨" && $('.weatherIcon').addClass('icon-xiaoyu');
+                weather.split('')[weather.split('').length - 1] === "雪" && $('.weatherIcon').addClass('icon-xue');
+                weather.split('')[weather.split('').length - 1] === "云" && $('.weatherIcon').addClass('icon-cloudy');
+                weather.split('')[weather.split('').length - 1] === "阴" && $('.weatherIcon').addClass('icon-yin');
                 // pm25 = data.results[0].pm25;
                 $('.currentweather').text(weather);
                 $('.currentTemperature').text(temperature);

@@ -22,6 +22,9 @@
             <span class="time"></span>
         </div>
     </div>
+
+
+    <!--50寸大屏部分 start-->
     <!--<div class="hour">
         <div class="row m-0-a m-t-20 bg-white" style="height: 430px;">
             <div style="width: 500px; height: 350px;" class="inline-block pull-left p-l-10">
@@ -45,7 +48,96 @@
             <div id="container-ws" style="width:1280px;height:400px" class="inline-block"></div>
         </div>
     </div>-->
-    <!--temperature contrl start-->
+    <!--50寸大屏部分 end-->
+
+
+    <!--70寸大屏部分 start-->
+    <div class="environment-container">
+        <div class="row m-0-a m-t-120" style="height: 700px;color: white;">
+            <div class="environment weather p-r">
+                <div class="t-c environment-icon m-0-a p-r">
+                    <span class="em-icons weatherIcon p-a" style="font-size: 180px;top: 104px;left: 6px;color: #FDC500;"></span>
+                </div>
+                <div class="environment-font environment-weather t-c m-t-50" style="font-size:34px;">
+                    <span class="currentweather">--</span>
+                </div>
+                <div class="environment-temperature" style="font-size:60px;">
+                    <span class="p-a t-c currentTemperature" style="bottom: 100px;width:100%;"></span>
+                </div>
+            </div>
+            <div class="environment weather p-r">
+                <div class="t-c environment-icon m-0-a p-r">
+                    <span class="em-icons icon-temperature p-a" style="font-size: 180px;top: 95px;left: 10px;color: #FCA53A;"></span>
+                </div>
+                <div class="environment-font t-c m-t-50" style="font-size:34px;">
+                    <span>当前温度</span>
+                </div>
+                <div class="environment-temperature" style="font-size:60px;">
+                    <span class="p-a t-c temperatureRead" style="bottom: 100px;width:100%;"></span>
+                </div>
+            </div>
+            <div class="environment weather p-r">
+                <div class="t-c environment-icon m-0-a p-r">
+                    <span class="em-icons icon-humidity p-a" style="font-size: 180px;top: 100px;left: 6px;color:#72aee5;"></span>
+                </div>
+                <div class="environment-font t-c m-t-50" style="font-size:34px;">
+                    <span>当前湿度</span>
+                </div>
+                <div class="environment-temperature" style="font-size:60px;">
+                    <span class="p-a t-c humidityRead" style="bottom: 100px;width:100%;"></span>
+                </div>
+            </div>
+            <div class="environment weather p-r">
+                <div class="t-c environment-icon m-0-a p-r">
+                    <span class="p-a" style="font-size: 60px;line-height: 100%;color: #4E9F23;font-weight:bold;top:75px;left:30px;">VOC</span>
+                </div>
+                <div class="environment-font t-c m-t-50" style="font-size:34px;">
+                    <span>实时VOC</span>
+                </div>
+                <div class="environment-temperature" style="font-size:60px;">
+                    <span class="p-a t-c VOCRead" style="bottom: 100px;width:100%;"></span>
+                </div>
+            </div>
+            <div class="environment weather p-r">
+                <div class="t-c environment-icon m-0-a p-r">
+                    <span class="p-a" style="font-size: 60px;line-height: 100%;color: #FF6324;font-weight:bold;top:75px;left:15px;">PM2.5</span>
+                </div>
+                <div class="environment-font t-c m-t-50" style="font-size:34px;">
+                    <span>实时PM2.5</span>
+                </div>
+                <div class="environment-temperature" style="font-size:60px;">
+                    <span class="p-a t-c pm25Read" style="bottom: 100px;width:100%;"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="energy none">
+        <div id="container-energy" class="clearfix" style="width:100%;height:100%"></div>
+        <div class="highcharts-comment t-c">
+            <div class="half">
+                <div class="">
+                    <div class="unitAreaTitle">单位面积能耗</div>
+                    <div class="unitAreaCounting">
+                        <span class="kgceperunitarea"></span>
+                        <span class="unitAreaUnit">kgce/m2</span>
+                    </div>
+                </div>
+            </div>
+            <div class="half">
+                <div class="">
+                    <div class="unitAreaTitle">单位面积电耗</div>
+                    <div class="unitAreaCounting">
+                        <span class="kwhperunitarea"></span>
+                        <span class="unitAreaUnit">kWh/m2</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--70寸大屏部分 end-->
+
+
+    <!--temperature contrl start  「此部分忽略」-->
     <!--<div class="temperature-container">
         <div class="row m-0-a m-t-40" style="height: 430px;">
             <div class="temperature inline-block">
@@ -299,88 +391,6 @@
         </div>
     </div>-->
     <!--temperature contrl end-->
-    <div class="environment-container">
-        <div class="row m-0-a m-t-120" style="height: 700px;color: white;">
-            <div class="environment weather p-r">
-                <div class="t-c environment-icon m-0-a p-r">
-                    <span class="em-icons weatherIcon p-a" style="font-size: 180px;top: 104px;left: 6px;color: #FDC500;"></span>
-                </div>
-                <div class="environment-font environment-weather t-c m-t-50" style="font-size:34px;">
-                    <span class="currentweather">--</span>
-                </div>
-                <div class="environment-temperature" style="font-size:60px;">
-                    <span class="p-a t-c currentTemperature" style="bottom: 100px;width:100%;"></span>
-                </div>
-            </div>
-            <div class="environment weather p-r">
-                <div class="t-c environment-icon m-0-a p-r">
-                    <span class="em-icons icon-temperature p-a" style="font-size: 180px;top: 95px;left: 10px;color: #FCA53A;"></span>
-                </div>
-                <div class="environment-font t-c m-t-50" style="font-size:34px;">
-                    <span>当前温度</span>
-                </div>
-                <div class="environment-temperature" style="font-size:60px;">
-                    <span class="p-a t-c temperatureRead" style="bottom: 100px;width:100%;"></span>
-                </div>
-            </div>
-            <div class="environment weather p-r">
-                <div class="t-c environment-icon m-0-a p-r">
-                    <span class="em-icons icon-humidity p-a" style="font-size: 180px;top: 100px;left: 6px;color:#72aee5;"></span>
-                </div>
-                <div class="environment-font t-c m-t-50" style="font-size:34px;">
-                    <span>当前湿度</span>
-                </div>
-                <div class="environment-temperature" style="font-size:60px;">
-                    <span class="p-a t-c humidityRead" style="bottom: 100px;width:100%;"></span>
-                </div>
-            </div>
-            <div class="environment weather p-r">
-                <div class="t-c environment-icon m-0-a p-r">
-                    <span class="p-a" style="font-size: 60px;line-height: 100%;color: #4E9F23;font-weight:bold;top:75px;left:30px;">VOC</span>
-                </div>
-                <div class="environment-font t-c m-t-50" style="font-size:34px;">
-                    <span>实时VOC</span>
-                </div>
-                <div class="environment-temperature" style="font-size:60px;">
-                    <span class="p-a t-c VOCRead" style="bottom: 100px;width:100%;"></span>
-                </div>
-            </div>
-            <div class="environment weather p-r">
-                <div class="t-c environment-icon m-0-a p-r">
-                    <span class="p-a" style="font-size: 60px;line-height: 100%;color: #FF6324;font-weight:bold;top:75px;left:15px;">PM2.5</span>
-                </div>
-                <div class="environment-font t-c m-t-50" style="font-size:34px;">
-                    <span>实时PM2.5</span>
-                </div>
-                <div class="environment-temperature" style="font-size:60px;">
-                    <span class="p-a t-c pm25Read" style="bottom: 100px;width:100%;"></span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="energy none">
-        <div id="container-energy" class="clearfix" style="width:100%;height:100%"></div>
-        <div class="highcharts-comment t-c">
-            <div class="half">
-                <div class="">
-                    <div class="unitAreaTitle">单位面积能耗</div>
-                    <div class="unitAreaCounting">
-                        <span class="kgceperunitarea"></span>
-                        <span class="unitAreaUnit">kgce/m2</span>
-                    </div>
-                </div>
-            </div>
-            <div class="half">
-                <div class="">
-                    <div class="unitAreaTitle">单位面积电耗</div>
-                    <div class="unitAreaCounting">
-                        <span class="kwhperunitarea"></span>
-                        <span class="unitAreaUnit">kWh/m2</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <script src="http://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
     <script src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
     <script src="http://cdn.hcharts.cn/highcharts/highcharts-more.js"></script>
