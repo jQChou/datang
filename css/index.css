@@ -158,6 +158,11 @@ a {
     content: " ";
 }
 
+.time {
+    display: inline-block;
+    width: 270px;
+}
+
 .hour {
     width: 100%;
     height: 90%;

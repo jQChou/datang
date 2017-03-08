@@ -1,3 +1,4 @@
+// window.open(document.location)
 var current_address, weather_url, pm25, hourInterval, temperatureInterval, environmentInterval, energyInterval, DATE = new Date(),
     mouth = DATE.getFullYear().toString() + (DATE.getMonth() > 8 && DATE.getMonth() + 1 || ('0' + (DATE.getMonth() + 1).toString())).toString();
 
@@ -8,10 +9,10 @@ function showTime() {
         secs = now.getSeconds(),
         time = "",
         timerID = setTimeout("showTime()", 1000);
+    time += ((hours <= 12) ? "   上午   " : "   下午   ");
     time += hours;
     time += ((mins < 10) ? ":0" : ":") + mins;
     time += ((secs < 10) ? ":0" : ":") + secs;
-    time += ((hours <= 12) ? "   上午   " : "   下午   ");
     $('.clock .time').html(time);
 };
 
