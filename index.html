@@ -10,7 +10,7 @@
     <meta name="author" content="jqChou">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
     <link rel="stylesheet" href="../css/index.css">
-    <link rel="stylesheet" href="//at.alicdn.com/t/font_tvs1rjso1br9t3xr.css">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_3820lovyg1n0cnmi.css">
     <title>大唐电信科技</title>
 </head>
 
@@ -18,11 +18,11 @@
     <div class="header header-font clearfix">
         <div class="logo inline-block pull-left m-l-10" onclick="fullScreen()"><a class="header-font" href="javascript:void(0);">大 唐 电 信 科 技 办 公 楼</a></div>
         <div class="clock inline-block pull-right m-r-10">
-            <span class="date"></span>
             <span class="time"></span>
+            <span class="date"></span>
         </div>
     </div>
-    <!--<div class="hour" style="position: absolute">
+    <!--<div class="hour">
         <div class="row m-0-a m-t-20 bg-white" style="height: 430px;">
             <div style="width: 500px; height: 350px;" class="inline-block pull-left p-l-10">
                 <div class="title">PM2.5实时变化</div>
@@ -35,17 +35,18 @@
                 <div class="title">温湿度实时变化</div>
                 <div class="m-t-20"><span class="em-icons icon-temperature t-c" style="font-size:150px;color:#fca53a;border:3px solid #fca53a;border-radius:10px;"></span>
                     <span class="m-l-10">当前温度</span>
-                    <span class="v-b" style="font-size:80px;color:#72aee5;">25℃</span>
+                    <span class="v-b temperatureRead" style="font-size:80px;color:#72aee5;"></span>
                 </div>
                 <div><span class="em-icons icon-humidity t-c" style="font-size:150px;color:#72aee5;border:3px solid #72aee5;border-radius:10px;"></span>
                     <span class="m-l-10">当前湿度</span>
-                    <span class="v-b" style="font-size:80px;color:#72aee5;">44%</span>
+                    <span class="v-b humidityRead" style="font-size:80px;color:#72aee5;"></span>
                 </div>
             </div>
             <div id="container-ws" style="width:1280px;height:400px" class="inline-block"></div>
         </div>
     </div>-->
-    <div class="temperature-container">
+    <!--temperature contrl start-->
+    <!--<div class="temperature-container">
         <div class="row m-0-a m-t-40" style="height: 430px;">
             <div class="temperature inline-block">
                 <div class="temperature-title"><span class="m-l-10">温控器01</span></div>
@@ -296,18 +297,19 @@
                 </div>
             </div>
         </div>
-    </div>
-    <!--<div class="environment-container">
+    </div>-->
+    <!--temperature contrl end-->
+    <div class="environment-container">
         <div class="row m-0-a m-t-120" style="height: 700px;color: white;">
             <div class="environment weather p-r">
                 <div class="t-c environment-icon m-0-a p-r">
-                    <span class="em-icons icon-qing p-a" style="font-size: 180px;top: 104px;left: 6px;color: #FDC500;"></span>
+                    <span class="em-icons weatherIcon p-a" style="font-size: 180px;top: 104px;left: 6px;color: #FDC500;"></span>
                 </div>
                 <div class="environment-font environment-weather t-c m-t-50" style="font-size:34px;">
-                    <span></span>
+                    <span class="currentweather">--</span>
                 </div>
                 <div class="environment-temperature" style="font-size:60px;">
-                    <span class="p-a t-c" style="bottom: 100px;width:100%;"></span>
+                    <span class="p-a t-c currentTemperature" style="bottom: 100px;width:100%;"></span>
                 </div>
             </div>
             <div class="environment weather p-r">
@@ -318,7 +320,7 @@
                     <span>当前温度</span>
                 </div>
                 <div class="environment-temperature" style="font-size:60px;">
-                    <span class="p-a t-c" style="bottom: 100px;width:100%;"></span>
+                    <span class="p-a t-c temperatureRead" style="bottom: 100px;width:100%;"></span>
                 </div>
             </div>
             <div class="environment weather p-r">
@@ -329,7 +331,7 @@
                     <span>当前湿度</span>
                 </div>
                 <div class="environment-temperature" style="font-size:60px;">
-                    <span class="p-a t-c" style="bottom: 100px;width:100%;"></span>
+                    <span class="p-a t-c humidityRead" style="bottom: 100px;width:100%;"></span>
                 </div>
             </div>
             <div class="environment weather p-r">
@@ -340,7 +342,7 @@
                     <span>实时VOC</span>
                 </div>
                 <div class="environment-temperature" style="font-size:60px;">
-                    <span class="p-a t-c" style="bottom: 100px;width:100%;"></span>
+                    <span class="p-a t-c VOCRead" style="bottom: 100px;width:100%;"></span>
                 </div>
             </div>
             <div class="environment weather p-r">
@@ -351,19 +353,19 @@
                     <span>实时PM2.5</span>
                 </div>
                 <div class="environment-temperature" style="font-size:60px;">
-                    <span class="p-a t-c" style="bottom: 100px;width:100%;"></span>
+                    <span class="p-a t-c pm25Read" style="bottom: 100px;width:100%;"></span>
                 </div>
             </div>
         </div>
-    </div>-->
-    <!--<div class="energy">
+    </div>
+    <div class="energy none">
         <div id="container-energy" class="clearfix" style="width:100%;height:100%"></div>
         <div class="highcharts-comment t-c">
             <div class="half">
                 <div class="">
                     <div class="unitAreaTitle">单位面积能耗</div>
                     <div class="unitAreaCounting">
-                        123456.78
+                        <span class="kgceperunitarea"></span>
                         <span class="unitAreaUnit">kgce/m2</span>
                     </div>
                 </div>
@@ -372,57 +374,19 @@
                 <div class="">
                     <div class="unitAreaTitle">单位面积电耗</div>
                     <div class="unitAreaCounting">
-                        876543.21
+                        <span class="kwhperunitarea"></span>
                         <span class="unitAreaUnit">kWh/m2</span>
                     </div>
                 </div>
             </div>
         </div>
-    </div>-->
+    </div>
     <script src="http://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
     <script src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
     <script src="http://cdn.hcharts.cn/highcharts/highcharts-more.js"></script>
     <script src="http://cdn.hcharts.cn/highcharts/modules/solid-gauge.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="./js/index.js"></script>
-    <script>
-        console.log('main', new Date());
-
-        function hour() {
-            $('.temperature-container').animate({
-                // left: '0',
-                left: '-200%'
-            }, 6000);
-            $('.hour').animate({
-                left: '0'
-            }, 6000);
-            $('.temperature-container').animate({
-                left: '200%'
-            }, 0);
-            console.log('hour', new Date());
-        };
-
-        function temperature() {
-            $('.hour').animate({
-                // left: '0',
-                left: '-100%'
-            }, 6000);
-            $('.temperature-container').animate({
-                left: '0',
-            }, 6000);
-            $('.hour').animate({
-                left: '100%'
-            }, 0);
-            console.log('temperature', new Date());
-        };
-        // setInterval(function () {
-        //     console.log('Interval', new Date());
-        //     temperature();
-        //     setTimeout(function () {
-        //         hour();
-        //     }, 15000)
-        // }, 30000);
-    </script>
 </body>
 
 </html>

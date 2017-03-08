@@ -1,4 +1,5 @@
-var current_address, weather_url, pm25, hourInterval, temperatureInterval, environmentInterval, energyInterval;
+var current_address, weather_url, pm25, hourInterval, temperatureInterval, environmentInterval, energyInterval, DATE = new Date(),
+    mouth = DATE.getFullYear().toString() + (DATE.getMonth() > 8 && DATE.getMonth() + 1 || ('0' + (DATE.getMonth() + 1).toString())).toString();
 
 function showTime() {
     var now = new Date(),
@@ -7,13 +8,13 @@ function showTime() {
         secs = now.getSeconds(),
         time = "",
         timerID = setTimeout("showTime()", 1000);
-    time += ((hours <= 12) ? "上午" : "下午");
     time += hours;
     time += ((mins < 10) ? ":0" : ":") + mins;
     time += ((secs < 10) ? ":0" : ":") + secs;
+    time += ((hours <= 12) ? "   上午   " : "   下午   ");
     $('.clock .time').html(time);
 };
-showTime();
+
 
 function fullScreen() {
     var el = document.documentElement;
@@ -37,7 +38,6 @@ function fullScreen() {
 //     $('.hour').animate({
 //         right: '100%'
 //     }, 0);
-//     temperature();
 // };
 // hour();
 
@@ -49,25 +49,25 @@ function fullScreen() {
 //     $('.temperature-container').animate({
 //         right: '100%'
 //     }, 0);
-//     hour();
 // };
 
 function environment() {
-    $('.temperature-container').animate({
-        right: '100%'
-    }, 3000);
-    $('.environment-container').animate({
-        right: '0'
-    }, 3000);
+    $('.energy').addClass('none')
+    $('.environment-container').removeClass('none');
+    setTimeout(energy(), 3000);
 };
+// setTimeout(energy(), 300000);
 
 function energy() {
-    $('.environment-container').animate({
-        right: '100%'
-    }, 3000);
-    $('.energy').animate({
-        right: '0'
-    }, 3000);
+    $('.energy').removeClass('none')
+    $('.environment-container').addClass('none');
+    // $('.environment-container').animate({
+    //     right: '100%'
+    // }, 3000);
+    // $('.energy').animate({
+    //     right: '30'
+    // }, 3000);
+    // setTimeout(environment(), 3000);
 };
 
 $.ajax({
@@ -86,8 +86,18 @@ $.ajax({
             jsonp: "callback",
             jsonpCallback: "success_jsonpCallback2",
             success: function (data) {
-                pm25 = data.results[0].pm25;
-
+                $('.date').text(data.date);
+                showTime();
+                temperature = data.results[0].weather_data[0].temperature;
+                weather = data.results[0].weather_data[0].weather;
+                weather[weather.length - 1] === "晴" && $('.weatherIcon').addClass('icon-qing');
+                weather[weather.length - 1] === "雨" && $('.weatherIcon').addClass('icon-xiaoyu');
+                weather[weather.length - 1] === "雪" && $('.weatherIcon').addClass('icon-xue');
+                weather[weather.length - 1] === "云" && $('.weatherIcon').addClass('icon-cloudy');
+                weather[weather.length - 1] === "阴" && $('.weatherIcon').addClass('icon-yin');
+                // pm25 = data.results[0].pm25;
+                $('.currentweather').text(weather);
+                $('.currentTemperature').text(temperature);
                 var gaugeOptions = {
                     chart: {
                         type: 'gauge',
@@ -197,193 +207,246 @@ $.ajax({
                     },
                     series: [{
                         name: 'PM2.5',
-                        data: [80],
+                        data: [pm25 || 0],
                         tooltip: {
                             valueSuffix: ' μm/m3'
                         }
                     }]
                 };
-                $('#container-pm25').highcharts(Highcharts.merge(gaugeOptions, {
+                $('#container-pm25').highcharts(Highcharts.merge(gaugeOptions,
                     function (chart) {
                         if (!chart.renderer.forExport) {
                             var point = chart.series[0].points[0];
-                            point.update(Number(pm25));
+                            // point.update(Number(pm25));
                         }
                     }
-                }));
-
-                var chart = $('#container-pm25').highcharts(),
-                    point;
-                if (chart) {
-                    point = chart.series[0].points[0];
-                    point.update(Number(pm25));
-                }
-                console.log(data);
-                $('.clock .date').html(data.date);
-                var weather = data.results[0].weather_data[0].weather + " " + data.results[0].weather_data[0].wind,
-                    temperature = data.results[0].weather_data[0].temperature;
-                $('.environment-weather span').html(weather);
-                $('.environment-temperature span').html(temperature);
-                console.log(weather);
+                ));
+                $.ajax({
+                    type: "POST",
+                    url: "/api/business/globalavg",
+                    dataType: "json",
+                    success: function (data) {
+                        var temperature = data.result.temperature,
+                            humidity = data.result.humidity,
+                            voc = data.result.voc;
+                        pm25 = data.result.pm25;
+                        var chart = $('#container-pm25').highcharts(),
+                            point;
+                        if (chart) {
+                            point = chart.series[0].points[0];
+                            point.update(Number(pm25));
+                        }
+                        $('.temperatureRead').text(temperature);
+                        $('.humidityRead').text(humidity);
+                        $('.VOCRead').text(voc);
+                        $('.pm25Read').text(pm25);
+                    },
+                    error: function (err) {}
+                });
             },
             error: function (err) {
-                console.log('error', err);
+                console.log(err);
             }
         });
     },
     error: function (err) {
-        console.log('error', err);
-    },
+        console.log(err);
+    }
 });
-
-$('#container-pm').highcharts({
-    title: {
-        text: 'PM2.5小时浓度变化',
-        x: -20 //center
-    },
-    // subtitle: {
-    //     text: 'Source: WorldClimate.com',
-    //     x: -20
-    // },
-    xAxis: {
-        categories: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00', ]
-    },
-    yAxis: {
-        title: {
-            text: 'PM2.5(μm/m3)'
-        },
-        plotLines: [{
-            value: 0,
-            width: 1,
-            color: '#e4393c'
-        }]
-    },
-    tooltip: {
-        valueSuffix: 'μm/m3'
-    },
-    credits: {
-        enabled: false
-    },
-    legend: {
-        layout: 'vertical',
-        align: 'right',
-        verticalAlign: 'middle',
-        borderWidth: 0
-    },
-    series: [{
-        name: 'pm2.5',
-        data: [7.0, 6.9, 9.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6, 3.1, 21, 12, 22]
-    }]
-});
-
-$('#container-ws').highcharts({
-    title: {
-        text: '温湿度小时变化',
-        x: -20 //center
-    },
-    credits: {
-        enabled: false
-    },
-    // subtitle: {
-    //     text: 'Source: WorldClimate.com',
-    //     x: -20
-    // },
-    xAxis: {
-        categories: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00', ]
-    },
-    yAxis: [{
-        title: {
-            text: '湿度 (%)'
-        },
-        opposite: true,
-        plotLines: [{
-            value: 0,
-            width: 1,
-            color: '#e4393c'
-        }]
-    }, {
-        title: {
-            text: '温度 (°C)'
-        },
-        plotLines: [{
-            value: 0,
-            width: 1,
-            color: '#808080'
-        }]
-    }],
-    legend: {
-        layout: 'vertical',
-        align: 'right',
-        verticalAlign: 'middle',
-        borderWidth: 0
-    },
-    series: [{
-        type: 'line',
-        yAxis: 0,
-        name: '温度',
-        tooltip: {
-            valueSuffix: '°C'
-        },
-        data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
-    }, {
-        type: 'spline',
-        yAxis: 1,
-        name: '湿度',
-        tooltip: {
-            valueSuffix: '%'
-        },
-        data: [-0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6, 2.5]
-    }]
-});
-
-$('#container-energy').highcharts({
-    chart: {
-        style: {
-            textAlign: 'center'
-        },
-        type: 'pie'
-    },
-    title: {
-        text: '<div class="pieTitle">月综合能耗</div><div class="pieNumber">' + 333 + '</div><div class="pieUnit">千克煤</div>',
-        verticalAlign: 'middle',
-        useHTML: true,
-        y: -60
-    },
-    credits: {
-        enabled: false
-    },
-    tooltip: {
-        pointFormat: ' <b>{point.y}</b> 千克煤'
-    },
-    plotOptions: {
-        pie: {
-            dataLabels: false,
-            innerSize: '85%',
-            showInLegend: true
+$.ajax({
+    type: "POST",
+    url: "api/business/runtimecurve",
+    dataType: "json",
+    success: function (data) {
+        var pm25Array = [],
+            temperatureArray = [],
+            humidityArray = [];
+        for (var i in data.result.pm25) {
+            pm25Array.push(data.result.pm25[i]);
         }
+        for (var i in data.result.humidity) {
+            humidityArray.push(data.result.humidity[i]);
+        }
+        for (var i in data.result.temperature) {
+            temperatureArray.push(data.result.temperature[i]);
+        }
+        $('#container-pm').highcharts({
+            title: {
+                text: 'PM2.5小时浓度变化',
+                x: -20 //center
+            },
+            // subtitle: {
+            //     text: 'Source: WorldClimate.com',
+            //     x: -20
+            // },
+            xAxis: {
+                categories: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00', ]
+            },
+            yAxis: {
+                title: {
+                    text: 'PM2.5(μm/m3)'
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#e4393c'
+                }]
+            },
+            tooltip: {
+                valueSuffix: 'μm/m3'
+            },
+            credits: {
+                enabled: false
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle',
+                borderWidth: 0
+            },
+            series: [{
+                name: 'pm2.5',
+                data: pm25Array
+            }]
+        });
+        $('#container-ws').highcharts({
+            title: {
+                text: '温湿度小时变化',
+                x: -20 //center
+            },
+            credits: {
+                enabled: false
+            },
+            // subtitle: {
+            //     text: 'Source: WorldClimate.com',
+            //     x: -20
+            // },
+            xAxis: {
+                categories: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00', ]
+            },
+            yAxis: [{
+                title: {
+                    text: '湿度 (%)'
+                },
+                opposite: true,
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#e4393c'
+                }]
+            }, {
+                title: {
+                    text: '温度 (°C)'
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            }],
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle',
+                borderWidth: 0
+            },
+            series: [{
+                type: 'line',
+                yAxis: 0,
+                name: '温度',
+                tooltip: {
+                    valueSuffix: '°C'
+                },
+                data: temperatureArray
+            }, {
+                type: 'spline',
+                yAxis: 1,
+                name: '湿度',
+                tooltip: {
+                    valueSuffix: '%'
+                },
+                data: humidityArray
+            }]
+        });
     },
-    legend: {
-        verticalAlign: 'middle',
-        layout: 'vertical',
-        labelFormatter: function () {
-            return '<div style="text-align:left;">' + (Math.round(this.percentage * 10) / 10) + '% ' + this.name + '</div><div style="color:#BBB;text-align:left;">' + this.y + 'KGce</div>';
-        },
-        itemWidth: 100,
-        useHTML: true,
-        x: 600
+    error: function (err) {
+        console.log(err);
+    }
+});
+
+$.ajax({
+    url: "/api/business/monthlykgce",
+    type: "POST",
+    dataType: "json",
+    data: JSON.stringify({
+        time: mouth,
+        project: 'PROJECT'
+    }),
+    contentType: 'application/json',
+    success: function (data) {
+        $('.kgceperunitarea').text(data.result.PROJECT.kgceperunitarea);
+        $('.kwhperunitarea').text(data.result.PROJECT.kwhperunitarea);
+        var series = [];
+        for (var i in data.result.PROJECT.detail) {
+            var a = [i, data.result.PROJECT.detail[i]];
+            series.push(a);
+        }
+        $('#container-energy').highcharts({
+            chart: {
+                style: {
+                    textAlign: 'center'
+                },
+                type: 'pie'
+            },
+            title: {
+                text: '<div class="pieTitle">月综合能耗</div><div class="pieNumber">' + data.result.PROJECT.kgce + '</div><div class="pieUnit">千克煤</div>',
+                verticalAlign: 'middle',
+                useHTML: true,
+                y: -60
+            },
+            credits: {
+                enabled: false
+            },
+            tooltip: {
+                pointFormat: ' <b>{point.y}</b> 千克煤'
+            },
+            plotOptions: {
+                pie: {
+                    dataLabels: false,
+                    innerSize: '93%',
+                    showInLegend: true
+                }
+            },
+            legend: {
+                verticalAlign: 'middle',
+                layout: 'vertical',
+                labelFormatter: function () {
+                    return '<div style="text-align:left;">' + (Math.round(this.percentage * 10) / 10) + '% ' + this.name + '</div><div style="color:#BBB;text-align:left;">' + this.y + 'KGce</div>';
+                },
+                itemWidth: 100,
+                useHTML: true,
+                x: 600
+            },
+            series: [{
+                tooltip: {
+                    valueSuffix: '%'
+                },
+                data: series
+            }]
+        });
     },
-    series: [{
-        name: 111,
-        tooltip: {
-            valueSuffix: '%'
-        },
-        data: [
-            ['aaa', 111],
-            ['bbb', 222],
-            ['ccc', 333],
-            ['ddd', 444],
-            ['eee', 555],
-            ['fff', 666]
-        ]
-    }]
-})
+    error: function (err) {
+        console.log(err);
+    }
+});
+
+
+$.ajax({
+    type: "POST",
+    url: "api/business/airquality",
+    dataType: "json",
+    success: function (data) {},
+    error: function (err) {
+        console.log(err);
+    }
+});

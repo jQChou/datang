@@ -21,6 +21,10 @@ a {
     color: #000;
 }
 
+.none {
+    display: none;
+}
+
 .bg-white {
     background-color: white;
 }
@@ -185,13 +189,11 @@ a {
 .fly-left {
     position: absolute;
     left: 100%;
-    right: 0;
 }
 
 .fly-right {
     position: absolute;
     right: 100%;
-    left: 0;
 }
 
 .header {
