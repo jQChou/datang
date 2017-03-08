@@ -33,49 +33,6 @@ function fullScreen() {
     }
 }
 
-// function hour() {
-//     $('.hour').animate({
-//         // left: '100%',
-//         right: '0'
-//     }, 6000);
-//     $('.hour').animate({
-//         right: '100%'
-//     }, 0);
-// };
-// hour();
-
-// function temperature() {
-//     $('.temperature-container').animate({
-//         // left: '100%',
-//         right: '0'
-//     }, 6000);
-//     $('.temperature-container').animate({
-//         right: '100%'
-//     }, 0);
-// };
-
-function environment() {
-    environmentInterval && clearInterval(environmentInterval);
-    environmentInterval = setInterval(energy(), 3000);
-    $('.energy').addClass('none')
-    $('.environment-container').removeClass('none');
-};
-// setTimeout(energy(), 300000);
-
-function energy() {
-    energyInterval && clearInterval(energyInterval);
-    energyInterval = setInterval(environment(), 3000);
-    $('.energy').removeClass('none')
-    $('.environment-container').addClass('none');
-    // $('.environment-container').animate({
-    //     right: '100%'
-    // }, 3000);
-    // $('.energy').animate({
-    //     right: '30'
-    // }, 3000);
-    // setTimeout(environment(), 3000);
-};
-// energy();
 var environmentWidth = $('.environment-container').width();
 var energyWidth = $('.energy').width();
 
