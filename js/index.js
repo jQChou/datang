@@ -2,7 +2,8 @@ var current_address, weather_url, pm25, energyInterval, environmentInterval = nu
     index = 1,
     energyInterval = null,
     DATE = new Date(),
-    mouth = DATE.getFullYear().toString() + (DATE.getMonth() > 8 && DATE.getMonth() + 1 || ('0' + (DATE.getMonth() + 1).toString())).toString();
+    year = DATE.getFullYear().toString(),
+    mouth = (DATE.getMonth() > 8 && DATE.getMonth() + 1 || ('0' + (DATE.getMonth() + 1).toString())).toString();
 
 function showTime() {
     var now = new Date(),
@@ -17,6 +18,29 @@ function showTime() {
     time += ((secs < 10) ? ":0" : ":") + secs;
     $('.clock .time').html(time);
 };
+
+$('#ca').calendar({
+    width: 320,
+    height: 320,
+    // data: [{
+    //         date: '2015/12/24',
+    //         value: 'Christmas Eve'
+    //     },
+    //     {
+    //         date: '2015/12/25',
+    //         value: 'Merry Christmas'
+    //     },
+    //     {
+    //         date: '2016/01/01',
+    //         value: 'Happy New Year'
+    //     }
+    // ],
+    // onSelected: function (view, date, data) {
+    //     console.log('view:' + view)
+    //     alert('date:' + date)
+    //     console.log('data:' + (data || 'None'));
+    // }
+});
 
 
 function fullScreen() {
@@ -49,26 +73,25 @@ function go() {
 }
 
 function selectPic(num) {
-    console.log('num', num);
     if (num === 1) {
         $(".environment-container").addClass("none").siblings().removeClass("none");
         $(".environment-container").animate({
             left: -environmentWidth,
-        }, 2000, 'linear');
+        }, 3000, 'linear');
         $(".energy").animate({
             left: '50px',
-        }, 2000, 'linear')
+        }, 3000, 'linear')
     } else {
         $(".energy").addClass("none").siblings().removeClass("none");
         $(".energy").animate({
             left: -energyWidth,
-        }, 2000, 'linear');
+        }, 3000, 'linear');
         $(".environment-container").animate({
             left: '0px',
-        }, 2000, 'linear')
+        }, 3000, 'linear')
     }
     clearInterval(timer);
-    timer = setInterval('go()', 5000);
+    timer = setInterval('go()', 12000);
 }
 
 $.ajax({
@@ -102,8 +125,13 @@ $.ajax({
                 var gaugeOptions = {
                     chart: {
                         type: 'gauge',
+                        backgroundColor: 'rgba(255, 255, 255, 0)',
+                        plotBorderColor: null,
                         plotBackgroundColor: null,
                         plotBackgroundImage: null,
+                        plotBorderWidth: null,
+                        plotShadow: false,
+                        borderWidth: 0,
                         plotBorderWidth: 0,
                         plotShadow: false
                     },
@@ -111,6 +139,9 @@ $.ajax({
                         text: 'PM2.5'
                     },
                     credits: {
+                        enabled: false
+                    },
+                    exporting: {
                         enabled: false
                     },
                     pane: {
@@ -272,6 +303,18 @@ $.ajax({
             temperatureArray.push(data.result.temperature[i]);
         }
         $('#container-pm').highcharts({
+            chart: {
+                backgroundColor: 'rgba(255, 255, 255, 0)',
+                plotBorderColor: null,
+                plotBackgroundColor: null,
+                plotBackgroundImage: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                borderWidth: 0
+            },
+            exporting: {
+                enabled: false
+            },
             title: {
                 text: 'PM2.5小时浓度变化',
                 x: -20 //center
@@ -311,6 +354,18 @@ $.ajax({
             }]
         });
         $('#container-ws').highcharts({
+            chart: {
+                backgroundColor: 'rgba(255, 255, 255, 0)',
+                plotBorderColor: null,
+                plotBackgroundColor: null,
+                plotBackgroundImage: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                borderWidth: 0
+            },
+            exporting: {
+                enabled: false
+            },
             title: {
                 text: '温湿度小时变化',
                 x: -20 //center
@@ -380,7 +435,7 @@ $.ajax({
     type: "POST",
     dataType: "json",
     data: JSON.stringify({
-        time: mouth,
+        time: year + mouth,
         project: 'PROJECT'
     }),
     contentType: 'application/json',
@@ -397,7 +452,14 @@ $.ajax({
                 style: {
                     textAlign: 'center'
                 },
-                type: 'pie'
+                type: 'pie',
+                backgroundColor: 'rgba(255, 255, 255, 0)',
+                plotBorderColor: null,
+                plotBackgroundColor: null,
+                plotBackgroundImage: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                borderWidth: 0
             },
             title: {
                 text: '<div class="pieTitle">月综合能耗</div><div class="pieNumber">' + data.result.PROJECT.kgce + '</div><div class="pieUnit">千克煤</div>',
@@ -418,6 +480,9 @@ $.ajax({
                     showInLegend: true
                 }
             },
+            exporting: {
+                enabled: false
+            },
             legend: {
                 verticalAlign: 'middle',
                 layout: 'vertical',
@@ -435,6 +500,72 @@ $.ajax({
                 data: series
             }]
         });
+    },
+    error: function (err) {
+        console.log(err);
+    }
+});
+$.ajax({
+    url: "/api/business/monthlykgce",
+    type: "POST",
+    dataType: "json",
+    data: JSON.stringify({
+        time: year + ((parseInt(mouth) - 1 < 10) && ('0' + (parseInt(mouth) - 1).toString()) || (parseInt(mouth) - 1).toString()),
+        project: 'PROJECT'
+    }),
+    contentType: 'application/json',
+    success: function (data) {
+        if (parseInt(mouth) - 1 > 0) {
+            $($('.lastMouth')[0]).text(((parseInt(mouth) - 1 < 10) && ('0' + (parseInt(mouth) - 1).toString()) || (parseInt(mouth) - 1).toString()) + '月')
+            $($('.lastMouth')[1]).text(data.result.PROJECT.kgce)
+        } else {
+            $('.lastMouth').text('');
+            $($('.mouthFont .pieUnit')[0]).text('');
+        };
+    },
+    error: function (err) {
+        console.log(err);
+    }
+});
+$.ajax({
+    url: "/api/business/monthlykgce",
+    type: "POST",
+    dataType: "json",
+    data: JSON.stringify({
+        time: year + ((parseInt(mouth) - 2 < 10) && ('0' + (parseInt(mouth) - 2).toString()) || (parseInt(mouth) - 2).toString()),
+        project: 'PROJECT'
+    }),
+    contentType: 'application/json',
+    success: function (data) {
+        if (parseInt(mouth) - 2 > 0) {
+            $($('.twoMouthAgo')[0]).text(((parseInt(mouth) - 2 < 10) && ('0' + (parseInt(mouth) - 2).toString()) || (parseInt(mouth) - 2).toString()) + '月')
+            $($('.twoMouthAgo')[1]).text(data.result.PROJECT.kgce)
+        } else {
+            $('.twoMouthAgo').text('');
+            $($('.mouthFont .pieUnit')[1]).text('');
+        };
+    },
+    error: function (err) {
+        console.log(err);
+    }
+});
+$.ajax({
+    url: "/api/business/monthlykgce",
+    type: "POST",
+    dataType: "json",
+    data: JSON.stringify({
+        time: year + ((parseInt(mouth) - 3 < 10) && ('0' + (parseInt(mouth) - 3).toString()) || (parseInt(mouth) - 3).toString()),
+        project: 'PROJECT'
+    }),
+    contentType: 'application/json',
+    success: function (data) {
+        if (parseInt(mouth) - 3 > 0) {
+            $($('.threeMouthAgo')[0]).text(((parseInt(mouth) - 3 < 10) && ('0' + (parseInt(mouth) - 3).toString()) || (parseInt(mouth) - 3).toString()) + '月')
+            $($('.threeMouthAgo')[1]).text(data.result.PROJECT.kgce)
+        } else {
+            $('.threeMouthAgo').text('');
+            $($('.mouthFont .pieUnit')[2]).text('');
+        };
     },
     error: function (err) {
         console.log(err);
